@@ -8,17 +8,36 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var viewMode: ViewMode = .list
+    
+    enum ViewMode {
+        case list, map
+    }
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        NavigationView {
+            VStack {
+                Picker("View Mode", selection: $viewMode) {
+                    Image(systemName: "list.bullet").tag(ViewMode.list)
+                    Image(systemName: "map").tag(ViewMode.map)
+                }
+                .pickerStyle(.segmented)
+                .padding()
+                
+                if viewMode == .list {
+                    BikeListView()
+                } else {
+                    BikeMapView()
+                }
+            }
+            .navigationTitle("Campus Bikes")
+            .navigationBarTitleDisplayMode(.large)
         }
-        .padding()
+        .navigationViewStyle(StackNavigationViewStyle())
     }
 }
 
 #Preview {
     ContentView()
 }
+

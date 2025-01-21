@@ -1,18 +1,51 @@
-//
-//  BikeListView.swift
-//  BIKE-DE
-//
-//  Created by Louis Brouwer on 21/01/2025.
-//
-
 import SwiftUI
 
 struct BikeListView: View {
+    @State private var bikes = sampleBikes
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        NavigationView {
+            List {
+                // Section for Campus A
+                Section(header: Text("Battersea").font(.headline)) {
+                    ForEach(bikes.filter { $0.location == "Campus A" }) { bike in
+                        NavigationLink(destination: BikeDetailView(bike: bike)) {
+                            HStack {
+                                Text(bike.id)
+                                    .font(.headline)
+                                Spacer()
+                                Text(bike.isAvailable ? "Available" : "In Use")
+                                    .foregroundColor(bike.isAvailable ? .green : .red)
+                            }
+                        }
+                    }
+                }
+                
+                // Section for Campus B
+                Section(header: Text("Kensington").font(.headline)) {
+                    ForEach(bikes.filter { $0.location == "Campus B" }) { bike in
+                        NavigationLink(destination: BikeDetailView(bike: bike)) {
+                            HStack {
+                                Text(bike.id)
+                                    .font(.headline)
+                                Spacer()
+                                Text(bike.isAvailable ? "Available" : "In Use")
+                                    .foregroundColor(bike.isAvailable ? .green : .red)
+                            }
+                        }
+                    }
+                }
+            }
+            .navigationTitle("Campus Bikes")
+            .listStyle(InsetGroupedListStyle()) // Optional: Gives a nicer appearance
+        }
     }
 }
 
-#Preview {
-    BikeListView()
+struct BikeListView_Previews: PreviewProvider {
+    static var previews: some View {
+        BikeListView()
+    }
 }
+
+
