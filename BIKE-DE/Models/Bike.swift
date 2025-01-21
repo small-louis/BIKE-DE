@@ -53,24 +53,39 @@ struct Bike: Identifiable, Codable {
     }
 }
 
-// Define parking zones
+// Updated ParkingZone to support polygon areas
 struct ParkingZone {
-    let center: CLLocationCoordinate2D
-    let radius: Double // in meters
     let name: String
+    let coordinates: [CLLocationCoordinate2D]  // Array of coordinates defining the polygon
+    let iconCoordinate: CLLocationCoordinate2D // Easternmost point for the parking symbol
+    
+    init(name: String, coordinates: [CLLocationCoordinate2D]) {
+        self.name = name
+        self.coordinates = coordinates
+        // Find easternmost point for icon placement
+        self.iconCoordinate = coordinates.max(by: { $0.longitude < $1.longitude }) ?? coordinates[0]
+    }
 }
 
-// Sample data for testing
+// Updated sample data with polygon-based parking zones
 let parkingZones: [ParkingZone] = [
     ParkingZone(
-        center: CLLocationCoordinate2D(latitude: 51.4827, longitude: -0.1277), // Battersea
-        radius: 50,
-        name: "Battersea Campus"
+        name: "Battersea Campus",
+        coordinates: [
+            CLLocationCoordinate2D(latitude: 51.4827, longitude: -0.1277),
+            CLLocationCoordinate2D(latitude: 51.4830, longitude: -0.1277),
+            CLLocationCoordinate2D(latitude: 51.4830, longitude: -0.1270),
+            CLLocationCoordinate2D(latitude: 51.4827, longitude: -0.1270)
+        ]
     ),
     ParkingZone(
-        center: CLLocationCoordinate2D(latitude: 51.5007, longitude: -0.1246), // Kensington
-        radius: 50,
-        name: "Kensington Campus"
+        name: "Kensington Campus",
+        coordinates: [
+            CLLocationCoordinate2D(latitude: 51.5007, longitude: -0.1246),
+            CLLocationCoordinate2D(latitude: 51.5010, longitude: -0.1246),
+            CLLocationCoordinate2D(latitude: 51.5010, longitude: -0.1240),
+            CLLocationCoordinate2D(latitude: 51.5007, longitude: -0.1240)
+        ]
     )
 ]
 
