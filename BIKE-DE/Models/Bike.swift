@@ -54,31 +54,39 @@ struct Bike: Identifiable, Codable {
 }
 
 // Define parking zones
-struct ParkingZone {
-    let center: CLLocationCoordinate2D
-    let radius: Double // in meters
+struct ParkingZone: Identifiable {
+    let id = UUID()
+    let coordinates: [CLLocationCoordinate2D]
     let name: String
 }
 
 // Sample data for testing
 let parkingZones: [ParkingZone] = [
     ParkingZone(
-        center: CLLocationCoordinate2D(latitude: 51.4827, longitude: -0.1277), // Battersea
-        radius: 50,
+        coordinates: [
+            CLLocationCoordinate2D(latitude: 51.47925, longitude: -0.17013), // Northwest
+            CLLocationCoordinate2D(latitude: 51.47929, longitude: -0.17001), // Northeast
+            CLLocationCoordinate2D(latitude: 51.47898, longitude: -0.16977), // Southeast
+            CLLocationCoordinate2D(latitude: 51.47892, longitude: -0.16994)  // Southwest
+        ],
         name: "Battersea Campus"
     ),
     ParkingZone(
-        center: CLLocationCoordinate2D(latitude: 51.5007, longitude: -0.1246), // Kensington
-        radius: 50,
+        coordinates: [
+            CLLocationCoordinate2D(latitude: 51.5015, longitude: -0.1254), // Northwest
+            CLLocationCoordinate2D(latitude: 51.5015, longitude: -0.1238), // Northeast
+            CLLocationCoordinate2D(latitude: 51.4999, longitude: -0.1238), // Southeast
+            CLLocationCoordinate2D(latitude: 51.4999, longitude: -0.1254)  // Southwest
+        ],
         name: "Kensington Campus"
     )
 ]
 
 let sampleBikes: [Bike] = [
     Bike(id: "bike1", location: "Campus A", isAvailable: true, lockCode: "1234",
-         coordinates: CLLocationCoordinate2D(latitude: 51.4792, longitude: -0.1689)),
+         coordinates: CLLocationCoordinate2D(latitude: 51.47898, longitude: -0.16994)),
     Bike(id: "bike2", location: "Campus B", isAvailable: true, lockCode: "5678",
-         coordinates: CLLocationCoordinate2D(latitude: 51.4978, longitude: -0.1740)),
+         coordinates: CLLocationCoordinate2D(latitude: 51.5005, longitude: -0.1246)),
     // ... add coordinates for other bikes
 ]
 
