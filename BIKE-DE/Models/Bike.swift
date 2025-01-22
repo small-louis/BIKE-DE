@@ -76,9 +76,9 @@ let parkingZones: [ParkingZone] = [
 
 let sampleBikes: [Bike] = [
     Bike(id: "bike1", location: "Campus A", isAvailable: true, lockCode: "1234",
-         coordinates: CLLocationCoordinate2D(latitude: 51.4827, longitude: -0.1277)),
+         coordinates: CLLocationCoordinate2D(latitude: 51.4792, longitude: -0.1689)),
     Bike(id: "bike2", location: "Campus B", isAvailable: true, lockCode: "5678",
-         coordinates: CLLocationCoordinate2D(latitude: 51.5007, longitude: -0.1246)),
+         coordinates: CLLocationCoordinate2D(latitude: 51.4978, longitude: -0.1740)),
     // ... add coordinates for other bikes
 ]
 
