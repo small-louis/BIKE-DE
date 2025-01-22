@@ -42,9 +42,3 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
 
-<<<<<<< HEAD
-## Contact
-Your Name - your.email@example.com
-Project Link: [https://github.com/yourusername/BIKE-DE](https://github.com/yourusername/BIKE-DE) 
-=======
->>>>>>> dcf9ab3222737258babccd13260bcf5cbe4bc3d9
