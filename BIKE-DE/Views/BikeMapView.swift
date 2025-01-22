@@ -66,7 +66,7 @@ struct BikeMapView: View {
     @State private var bikes: [Bike]
     @State private var selectedBike: Bike?
     @State private var showingBikeDetail = false
-    @State private var showingPermissionAlert = false
+    @State private var userTrackingMode: MapUserTrackingMode = .follow
     
     init(bikes: [Bike] = sampleBikes) {
         _bikes = State(initialValue: bikes)
@@ -74,7 +74,11 @@ struct BikeMapView: View {
     
     var body: some View {
         ZStack {
-            Map(coordinateRegion: $region, interactionModes: .all, showsUserLocation: true, userTrackingMode: nil, annotationItems: bikes) { bike in
+            Map(coordinateRegion: $region, 
+                interactionModes: .all, 
+                showsUserLocation: true, 
+                userTrackingMode: $userTrackingMode,
+                annotationItems: bikes) { bike in
                 MapAnnotation(coordinate: bike.coordinates) {
                     BikeMapAnnotation(bike: bike, isSelected: bike.id == selectedBike?.id)
                         .onTapGesture {
@@ -84,6 +88,27 @@ struct BikeMapView: View {
                 }
             }
             .edgesIgnoringSafeArea(.all)
+            
+            // Add a tracking button to the bottom right
+            VStack {
+                Spacer()
+                HStack {
+                    Spacer()
+                    Button(action: {
+                        userTrackingMode = .follow
+                        if let location = locationManager.location {
+                            region.center = location.coordinate
+                        }
+                    }) {
+                        Image(systemName: "location.fill")
+                            .padding()
+                            .background(Color.white)
+                            .clipShape(Circle())
+                            .shadow(radius: 4)
+                    }
+                    .padding()
+                }
+            }
             
             if locationManager.permissionDenied {
                 VStack {
@@ -119,7 +144,10 @@ struct BikeMapView: View {
         }
         .onChange(of: locationManager.location) { newLocation in
             if let location = newLocation {
-                region.center = location.coordinate
+                // Only center on user's location if we're in tracking mode
+                if userTrackingMode == .follow {
+                    region.center = location.coordinate
+                }
             }
         }
     }
@@ -157,6 +185,19 @@ struct BikeMapAnnotation: View {
                     .cornerRadius(4)
             }
         }
+    }
+}
+
+struct UserLocationAnnotation: View {
+    var body: some View {
+        Image(systemName: "location.fill") // Use the arrow symbol here
+            .font(.title)
+            .foregroundColor(.blue)
+            .background(
+                Circle()
+                    .fill(Color.white)
+                    .frame(width: 40, height: 40)
+            )
     }
 }
 
