@@ -20,17 +20,19 @@ struct BikeMapContentView: View {
     
     var body: some View {
         Map(coordinateRegion: $region,
-            interactionModes: [.all],
             showsUserLocation: true,
             annotationItems: bikeAnnotations + parkingAnnotations) { item in
             MapAnnotation(coordinate: item.coordinate) {
                 switch item {
                 case .bike(let bike):
-                    BikeMapAnnotation(bike: bike, isSelected: bike.id == selectedBike?.id)
-                        .onTapGesture {
+                    BikeMapAnnotation(
+                        bike: bike,
+                        isSelected: bike.id == selectedBike?.id,
+                        onTap: {
                             selectedBike = bike
                             showingBikeDetail = true
                         }
+                    )
                 case .parkingIcon(let name, _):
                     ParkingIconView(name: name)
                 }
@@ -69,7 +71,9 @@ private struct ParkingZonesOverlayView: View {
             ForEach(parkingZones, id: \.name) { zone in
                 ParkingZoneOverlay(
                     coordinates: zone.coordinates,
-                    mapRect: MKMapRect(region),
+                    mapRect: MKMapRect(origin: MKMapPoint(region.center),
+                                     size: MKMapSize(width: region.span.longitudeDelta,
+                                                   height: region.span.latitudeDelta)),
                     frameSize: proxy.frame(in: .local).size
                 )
             }
@@ -102,4 +106,31 @@ private struct ParkingZoneOverlay: View {
             context.fill(path, with: .color(.blue.opacity(0.1)))
         }
     }
-} 
+}
+
+#if DEBUG
+struct BikeMapContentView_Previews: PreviewProvider {
+    struct PreviewWrapper: View {
+        @State private var region = MKCoordinateRegion(
+            center: CLLocationCoordinate2D(latitude: 51.4827, longitude: -0.1277),
+            span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
+        )
+        @State private var selectedBike: Bike?
+        @State private var showingBikeDetail = false
+        
+        var body: some View {
+            BikeMapContentView(
+                region: $region,
+                bikes: sampleBikes,
+                selectedBike: $selectedBike,
+                showingBikeDetail: $showingBikeDetail,
+                locationManager: LocationManager()
+            )
+        }
+    }
+    
+    static var previews: some View {
+        PreviewWrapper()
+    }
+}
+#endif 
